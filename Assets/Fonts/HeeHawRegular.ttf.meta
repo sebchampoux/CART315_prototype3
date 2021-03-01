@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: a0889ddb4f1f63e4eba6cc91d26bce83
+timeCreated: 1516224475
+licenseType: Free
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: HeeHaw
+  fontNames:
+  - HeeHaw
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

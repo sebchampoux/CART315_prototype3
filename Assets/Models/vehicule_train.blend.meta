@@ -1,0 +1,265 @@
+fileFormatVersion: 2
+guid: 6b72bf9239f5e534bbfd0625f694f527
+timeCreated: 1516159639
+licenseType: Free
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: base
+    100002: cabine
+    100004: cabinePlateforme
+    100006: cabineToit
+    100008: chasseBoeufs
+    100010: chaudiere
+    100012: chaudiere_001
+    100014: intersticesRails
+    100016: pistons
+    100018: pistons_001
+    100020: pistons_002
+    100022: pistons_003
+    100024: Plane
+    100026: rails
+    100028: roues_000
+    100030: roues_001
+    100032: roues_002
+    100034: roues_003
+    100036: //RootNode
+    100038: Cube
+    100040: Cube_001
+    100042: roues_004
+    100044: roues_005
+    100046: roues_006
+    100048: roues_007
+    400000: base
+    400002: cabine
+    400004: cabinePlateforme
+    400006: cabineToit
+    400008: chasseBoeufs
+    400010: chaudiere
+    400012: chaudiere_001
+    400014: intersticesRails
+    400016: pistons
+    400018: pistons_001
+    400020: pistons_002
+    400022: pistons_003
+    400024: Plane
+    400026: rails
+    400028: roues_000
+    400030: roues_001
+    400032: roues_002
+    400034: roues_003
+    400036: //RootNode
+    400038: Cube
+    400040: Cube_001
+    400042: roues_004
+    400044: roues_005
+    400046: roues_006
+    400048: roues_007
+    2100000: darkGrey
+    2100002: redAccent
+    2100004: clay
+    2100006: gold
+    2100008: wood
+    2100010: brownWood
+    2300000: base
+    2300002: cabine
+    2300004: cabinePlateforme
+    2300006: cabineToit
+    2300008: chasseBoeufs
+    2300010: chaudiere
+    2300012: chaudiere_001
+    2300014: intersticesRails
+    2300016: pistons
+    2300018: pistons_001
+    2300020: pistons_002
+    2300022: pistons_003
+    2300024: Plane
+    2300026: rails
+    2300028: roues_000
+    2300030: roues_001
+    2300032: roues_002
+    2300034: roues_003
+    2300036: Cube
+    2300038: Cube_001
+    2300040: roues_004
+    2300042: roues_005
+    2300044: roues_006
+    2300046: roues_007
+    3300000: base
+    3300002: cabine
+    3300004: cabinePlateforme
+    3300006: cabineToit
+    3300008: chasseBoeufs
+    3300010: chaudiere
+    3300012: chaudiere_001
+    3300014: intersticesRails
+    3300016: pistons
+    3300018: pistons_001
+    3300020: pistons_002
+    3300022: pistons_003
+    3300024: Plane
+    3300026: rails
+    3300028: roues_000
+    3300030: roues_001
+    3300032: roues_002
+    3300034: roues_003
+    3300036: Cube
+    3300038: Cube_001
+    3300040: roues_004
+    3300042: roues_005
+    3300044: roues_006
+    3300046: roues_007
+    4300000: roues_003
+    4300002: pistons_001
+    4300004: pistons_002
+    4300006: Plane
+    4300008: chaudiere_001
+    4300010: cabinePlateforme
+    4300012: cabineToit
+    4300014: cabine
+    4300016: chasseBoeufs
+    4300018: pistons
+    4300020: roues_002
+    4300022: pistons_003
+    4300024: roues_001
+    4300026: base
+    4300028: chaudiere
+    4300030: roues_000
+    4300032: rails
+    4300034: intersticesRails
+    4300036: Cube_001
+    4300038: Cube
+    4300040: roues_007
+    4300042: roues_006
+    4300044: roues_005
+    4300046: roues_004
+    7400000: TrainWheelsTurning
+    9500000: //RootNode
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: darkGrey
+    second: {fileID: 2100000, guid: b3bf563e13e1c59409a699fee6af0cf1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gold
+    second: {fileID: 2100000, guid: 4486df0b32c085941a49b26c55a83f72, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: redAccent
+    second: {fileID: 2100000, guid: 13c692300af0dc243936094774b98215, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: wood
+    second: {fileID: 2100000, guid: 9ae5f8ba98d8c764a9293ac37ba30ca5, type: 2}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: roues_002
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: TrainWheelsTurning
+      takeName: Default Take
+      firstFrame: 1
+      lastFrame: 71
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
