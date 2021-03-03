@@ -8,13 +8,8 @@ using UnityEngine.SceneManagement;
 public class GameController : MonoBehaviour {
 
     public int player1points;
-    public int player2points;
-
     public Text pointsPlayer1;
-    public Text pointsPlayer2;
-
     public int curPlayer1HoldEggs;
-    public int curPlayer2HoldEggs;
 
     [HideInInspector]
     public int nbreEnnemie = 2;
@@ -22,9 +17,6 @@ public class GameController : MonoBehaviour {
 
     public int curOeufs;
     public int maxOeufs = 4;
-
-    public int curLvl;
-    public int maxLvl;
     
     public GameObject[] spawnPointEnnemis;
     public GameObject[] spawnPointOeuf;
@@ -33,40 +25,23 @@ public class GameController : MonoBehaviour {
     public GameObject ennemi;
 
     private GameObject player1;
-    private GameObject player2;
 
     private GameObject[] video;
 
     public GameObject paneauVictoire;
     public GameObject paneauJoueur1;
-    public GameObject paneauJoueur2;
-
-    private string[] cheatCode;
-    private int indexDuCheatCode;
 
     private void Awake()
     {
-        // Le cheat code
-        cheatCode = new string[] { "b", "a", "m", "b", "o", "o", "z", "l", "e" };
-        indexDuCheatCode = 0;
-
         player1points = 0;
-        player2points = 0;
-
-        curLvl = 0;
-        maxLvl = 4;
-
         player1 = GameObject.FindGameObjectWithTag("player1");
-        player2 = GameObject.FindGameObjectWithTag("player2");
     }
 
 
     void Start()
     {
-        mapGen();
-
+        StartLevel();
         video = GameObject.FindGameObjectsWithTag("cancer");
-
     }
 
 
@@ -78,12 +53,8 @@ public class GameController : MonoBehaviour {
             pointsPlayer1.text = player1points.ToString();
         }
 
-        if (Int32.Parse(pointsPlayer2.text) != player2points)
-        {
-            pointsPlayer2.text = player2points.ToString();
-        }
-
         //nouveau niveau
+        /*
         if (curLvl == maxLvl)
         {
             paneauVictoire.GetComponent<Canvas>().enabled = true;
@@ -115,40 +86,13 @@ public class GameController : MonoBehaviour {
             player2.GetComponent<Player2Manager>().mort();
 
             mapGen();
-                 
         }
-
-
-        if (Input.anyKeyDown)
-        {
-            if (Input.GetKeyDown(cheatCode[indexDuCheatCode]))
-            {
-                indexDuCheatCode++;
-            }
-
-            else
-            {
-                indexDuCheatCode = 0;
-            }
-        }
-
-        if (indexDuCheatCode == cheatCode.Length)
-        {
-            for(int x = 0; x < video.Length; x++)
-            {
-                video[x].GetComponent<MeshRenderer>().enabled = true;
-                video[x].GetComponent<Video>().commencerVideo();
-            }
-        }
+        */
     }
 
-    private void mapGen()
+    private void StartLevel()
     {
-        curLvl += 1;
-
         curPlayer1HoldEggs = 0;
-        curPlayer2HoldEggs = 0;
-
         spawnOeufs();
         spawnEnnemies();
     }
@@ -165,29 +109,19 @@ public class GameController : MonoBehaviour {
 
     private void spawnOeufs()
     {
-        //spawnPointOeuf = GameObject.FindGameObjectsWithTag("spawnPointOeuf");
-        for (int x = 0; x < maxOeufs; x++)
+        foreach(GameObject spawnPt in spawnPointOeuf)
         {
-            int rand = UnityEngine.Random.Range(0, spawnPointOeuf.Length);
-            GameObject e;
-            e = Instantiate(oeuf, spawnPointOeuf[rand].transform);
-            e.transform.parent = gameObject.transform;
-
-            curOeufs++;
+            GameObject oeufInstance = Instantiate(oeuf, spawnPt.transform);
+            oeufInstance.transform.parent = gameObject.transform;
         }
     }
 
     private void spawnEnnemies()
     {
-        //spawnPointEnnemis = GameObject.FindGameObjectsWithTag("spawnPointEnnemie");
-
-        for(curNbreEnnemie = 0; curNbreEnnemie < nbreEnnemie; curNbreEnnemie++)
+        foreach(GameObject spawnPt in spawnPointEnnemis)
         {
-            int rand = UnityEngine.Random.Range(0, spawnPointEnnemis.Length);
-
-            GameObject e;
-            e = Instantiate(ennemi, spawnPointEnnemis[rand].transform);
-            e.transform.parent = gameObject.transform;
+            GameObject ennemiGO = Instantiate(ennemi, spawnPt.transform);
+            ennemiGO.transform.parent = gameObject.transform;
         }
     }
 }
