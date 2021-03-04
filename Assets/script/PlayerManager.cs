@@ -1,85 +1,118 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using System.Linq;
-using System;
-using UnityStandardAssets.ImageEffects;
+using UnityEngine.InputSystem;
 
-public class PlayerManager : MonoBehaviour {
-
-    // Pour le son
-    //public AudioSource sourceAudioDriving;
-    //public AudioSource sourceAudioSFX;
-    //public AudioClip sonEngineIdle;
-    //public AudioClip sonEngineDriving;
-    //public float pitchRange = 0.2f;
-    //private float originalSoundPitch;
-
-    //public bool enDeplacement = false;
-
-
-        // Le reste
+public class PlayerManager : MonoBehaviour
+{
+    // Le reste
     private float baseSpeed = 4.0f;
     private float sprintSpeed = 8.0f;
     public float rotSpeed = 5.0f;
-
-    private float gazLeft = 100.0f; 
+    private float gazLeft = 100.0f;
     private float gazMax = 100.0f;
     public GameObject gaz;
-
     public float curDanger = 0;
     public float maxDanger = 100.0f;
     public GameObject danger;
-
     public GameObject[] possibleDanger;
-
     public int vie = 3;
     private int maxVie = 3;
-
     public bool touchable = true;
-
-    [HideInInspector]
-    public Vector3 startPos;
-
+    [HideInInspector] public Vector3 startPos;
     public GameObject vies;
-
-    [HideInInspector]
-    public Vector3[] posVies;
-
+    [HideInInspector] public Vector3[] posVies;
     public GameObject camera1;
 
-
-
     // Use this for initialization
-    void Start () {
-        // Pour le son
-        //originalSoundPitch = sourceAudioDriving.pitch;
-        //sourceAudioDriving.clip = sonEngineIdle;
-        //sourceAudioDriving.Play();
-
+    void Start()
+    {
         startPos = transform.position;
-
         for (int x = 0; vies.transform.childCount < vie; x++)
         {
             posVies[x] = vies.transform.GetChild(x).transform.localPosition;
         }
-
-        
-
         StartCoroutine(DistanceComparison());
-}
+    }
 
-	
-	// Update is called once per frame
-	void Update () {
+    private void InputListen()
+    {
+        Keyboard keyboard = Keyboard.current;
+        if (keyboard == null)
+        {
+            throw new UnityException("No keyboard detected");
+        }
 
+        // Rotate
+        if (keyboard.dKey.isPressed)
+        {
+            transform.Rotate(Vector3.up * rotSpeed, Space.World);
+        }
+        if (keyboard.aKey.isPressed)
+        {
+            transform.Rotate(Vector3.up * -1 * rotSpeed, Space.World);
+        }
+
+        // Move forward
+        if (keyboard.wKey.isPressed)
+        {
+            RaycastHit hit;
+
+            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 1f))
+            {
+                string tTag = hit.transform.tag;
+
+                if (tTag == "Danger" || tTag == "obstacle")
+                {
+                    return;
+                }
+
+                if (keyboard.leftShiftKey.isPressed && HasGazLeft())
+                {
+                    transform.Translate(Vector3.forward * sprintSpeed * Time.deltaTime);
+                    gazLeft--;
+
+                    if (gazLeft <= 0)
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    transform.Translate(Vector3.forward * baseSpeed * Time.deltaTime);
+                }
+            }
+
+            if (keyboard.leftShiftKey.isPressed && HasGazLeft())
+            {
+                transform.Translate(Vector3.forward * sprintSpeed * Time.deltaTime);
+                gazLeft--;
+
+                if (gazLeft <= 0)
+                {
+                    return;
+                }
+            }
+            else
+            {
+                transform.Translate(Vector3.forward * baseSpeed * Time.deltaTime);
+            }
+        }
+    }
+
+    private bool HasGazLeft()
+    {
+        return gazLeft > 0;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
         InputListen();
 
         if (vie == 0)
             mort();
 
-        if (gazLeft < gazMax && !(Input.GetKey(KeyCode.LeftShift)))
+        if (gazLeft < gazMax && !Keyboard.current.leftShiftKey.isPressed)
             gazLeft += 0.5f;
 
         if (curDanger > 95.0f && touchable == true)
@@ -90,41 +123,15 @@ public class PlayerManager : MonoBehaviour {
 
         if (curDanger > 50.0f)
         {
-            camera1.GetComponent<Grayscale>().enabled = true;
+            //camera1.GetComponent<Grayscale>().enabled = true;
         }
         else
         {
-            camera1.GetComponent<Grayscale>().enabled = false;
+            //camera1.GetComponent<Grayscale>().enabled = false;
         }
-
-
-
         gaz.GetComponent<RectTransform>().localScale = new Vector3((gazLeft / 100.0f), 1, 1);
-
         danger.GetComponent<RectTransform>().localScale = new Vector3((curDanger / 100), 1, 1);
-
-
-        // Ajuster les sons selon les mouvements du tracteur
-        //EngineAudio();
     }
-
-    // Ajuste le son du tracteur selon s'il est en mouvement ou pas
-    //private void EngineAudio ()
-    //{
-    //    if(enDeplacement && sourceAudioDriving.clip != sonEngineDriving)
-    //    {
-    //        sourceAudioDriving.clip = sonEngineDriving;
-    //        sourceAudioDriving.pitch = UnityEngine.Random.Range(originalSoundPitch - pitchRange, originalSoundPitch + pitchRange);
-    //        sourceAudioDriving.Play();
-    //    }
-    //    else if (!enDeplacement && sourceAudioDriving != sonEngineIdle)
-    //    {
-    //        sourceAudioDriving.clip = sonEngineIdle;
-    //        sourceAudioDriving.pitch = UnityEngine.Random.Range(originalSoundPitch - pitchRange, originalSoundPitch + pitchRange);
-    //        sourceAudioDriving.Play();
-    //    }
-    //}
-
 
     public IEnumerator DistanceComparison()
     {
@@ -137,7 +144,7 @@ public class PlayerManager : MonoBehaviour {
 
             for (int x = 0; x < possibleDanger.Length; x++)
             {
-                
+
                 distanceFromPlayer = Vector3.Distance(this.transform.position, possibleDanger[x].transform.position);
 
                 if (distanceFromPlayer < 7.5f)
@@ -150,11 +157,14 @@ public class PlayerManager : MonoBehaviour {
                             {
                                 if (curDanger < maxDanger)
                                     curDanger += 1f;
-                            }else if (curDanger < maxDanger)
+                            }
+                            else if (curDanger < maxDanger)
                                 curDanger += 0.5f;
-                        }else if (curDanger < maxDanger)
+                        }
+                        else if (curDanger < maxDanger)
                             curDanger += 0.25f;
-                    }else if (curDanger < maxDanger)
+                    }
+                    else if (curDanger < maxDanger)
                         curDanger += 0.15f;
                 }
             }
@@ -166,9 +176,6 @@ public class PlayerManager : MonoBehaviour {
 
         }
     }
-
-
-
 
     public void perdVie()
     {
@@ -184,72 +191,6 @@ public class PlayerManager : MonoBehaviour {
         touchable = true;
     }
 
-    private void InputListen()
-    {
-
-        //enDeplacement = false;
-
-        // Rotation
-
-        if (Input.GetKey(KeyCode.D))
-        {
-            transform.Rotate(Vector3.up * rotSpeed, Space.World);
-            //enDeplacement = true;
-        }
-
-        if (Input.GetKey(KeyCode.A))
-        {
-            transform.Rotate(Vector3.up * -1 * rotSpeed, Space.World);
-            //enDeplacement = true;
-        }
-
-        //Avancer
-
-        if (Input.GetKey(KeyCode.W))
-        {
-            //enDeplacement = true
-
-            RaycastHit hit;
-
-            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 1f))
-            {
-                string tTag = hit.transform.tag;
-
-                if (tTag == "Danger" || tTag == "obstacle")
-                {
-                    return;
-                }
-
-                if (Input.GetKey(KeyCode.LeftShift) && gazLeft > 0)
-                {
-                    transform.Translate(Vector3.forward * sprintSpeed * Time.deltaTime);
-                    gazLeft--;
-
-                    if (gazLeft <= 0)
-                        return;
-                }
-                else
-                {
-                    transform.Translate(Vector3.forward * baseSpeed * Time.deltaTime);
-                }
-            }
-            
-
-            if (Input.GetKey(KeyCode.LeftShift) && gazLeft > 0)
-            {
-                transform.Translate(Vector3.forward * sprintSpeed * Time.deltaTime);
-                gazLeft--;
-
-                if (gazLeft <= 0)
-                    return;
-            }
-            else
-            {
-                transform.Translate(Vector3.forward * baseSpeed * Time.deltaTime);
-            }
-        }
-    }
-
     public void mort()
     {
         transform.position = startPos;
@@ -260,7 +201,7 @@ public class PlayerManager : MonoBehaviour {
 
     public void regainLife()
     {
-        for(int x = 0; vies.transform.childCount < vie; x++)
+        for (int x = 0; vies.transform.childCount < vie; x++)
         {
             GameObject v;
             v = Instantiate(Resources.Load("prefabs/vie", typeof(GameObject))) as GameObject;

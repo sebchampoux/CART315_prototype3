@@ -24,7 +24,6 @@ public class EnemyController : MonoBehaviour {
 
         if (Physics.Raycast(transform.position, -Vector3.forward, out hit, 15f))
         {
-
             if(hit.transform.tag == "player1")
             {
                 if(player1.GetComponent<PlayerManager>().touchable == true)
@@ -36,23 +35,8 @@ public class EnemyController : MonoBehaviour {
 
                     HitSound();
                 }
-                //player 1 en vue
-            }
-            else if(hit.transform.tag == "player2")
-            {
-                if (player2.GetComponent<Player2Manager>().touchable == true)
-                {
-                    float distanceFromPlayer;
-                    distanceFromPlayer = Vector3.Distance(this.transform.position, player2.transform.position);
-
-                    player2.GetComponent<Player2Manager>().curDanger += 15 / distanceFromPlayer;
-                     
-                    HitSound();
-                }
-                //player 2 en vue
             }
         }
-            
     }
 
 
