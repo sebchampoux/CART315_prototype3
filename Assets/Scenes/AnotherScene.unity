@@ -14058,6 +14058,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0e12408a848eeb4998420942b5f8b66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &763188131
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 763188127}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.83, y: 1.82, z: 2.17}
+  m_Center: {x: -0.57, y: 0.85, z: 0}
 --- !u!1 &788283391
 GameObject:
   m_ObjectHideFlags: 0
@@ -33951,7 +33964,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 492942fe562b48f4999def5521303377, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotSpeed: 7
+  rotSpeed: 4
   gaz: {fileID: 497435595}
   curDanger: 0
   maxDanger: 100

@@ -5,7 +5,6 @@ using UnityEngine;
 public class VoiturePolice : MonoBehaviour
 {
     public AudioSource sourceAudioSirene;
-    //public AudioClip sonSirene;
 
     private int destPoint = 0;
     public Transform[] path;

@@ -22,27 +22,35 @@ public class PlayerManager : MonoBehaviour
     public GameObject vies;
     [HideInInspector] public Vector3[] posVies;
     public GameObject camera1;
+    private Keyboard keyboard;
 
     // Use this for initialization
     void Start()
+    {
+        keyboard = Keyboard.current;
+        if (keyboard == null)
+        {
+            throw new UnityException("Keyboard not detected, not cool");
+        }
+        PositionLifeIndicators();
+        StartCoroutine(DistanceComparison());
+    }
+
+    private void PositionLifeIndicators()
     {
         startPos = transform.position;
         for (int x = 0; vies.transform.childCount < vie; x++)
         {
             posVies[x] = vies.transform.GetChild(x).transform.localPosition;
         }
-        StartCoroutine(DistanceComparison());
     }
 
-    private void InputListen()
+    private void ListenForInputs()
     {
-        Keyboard keyboard = Keyboard.current;
         if (keyboard == null)
         {
             throw new UnityException("No keyboard detected");
         }
-
-        // Rotate
         if (keyboard.dKey.isPressed)
         {
             transform.Rotate(Vector3.up * rotSpeed, Space.World);
@@ -51,52 +59,36 @@ public class PlayerManager : MonoBehaviour
         {
             transform.Rotate(Vector3.up * -1 * rotSpeed, Space.World);
         }
-
-        // Move forward
         if (keyboard.wKey.isPressed)
         {
-            RaycastHit hit;
+            MoveTractorForward();
+        }
+    }
 
-            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 1f))
+    private void MoveTractorForward()
+    {
+        RaycastHit hit;
+        if (TractorHitsObject(out hit))
+        {
+            string tTag = hit.transform.tag;
+            if (tTag == "Danger" || tTag == "obstacle")
             {
-                string tTag = hit.transform.tag;
-
-                if (tTag == "Danger" || tTag == "obstacle")
-                {
-                    return;
-                }
-
-                if (keyboard.leftShiftKey.isPressed && HasGazLeft())
-                {
-                    transform.Translate(Vector3.forward * sprintSpeed * Time.deltaTime);
-                    gazLeft--;
-
-                    if (gazLeft <= 0)
-                    {
-                        return;
-                    }
-                }
-                else
-                {
-                    transform.Translate(Vector3.forward * baseSpeed * Time.deltaTime);
-                }
-            }
-
-            if (keyboard.leftShiftKey.isPressed && HasGazLeft())
-            {
-                transform.Translate(Vector3.forward * sprintSpeed * Time.deltaTime);
-                gazLeft--;
-
-                if (gazLeft <= 0)
-                {
-                    return;
-                }
-            }
-            else
-            {
-                transform.Translate(Vector3.forward * baseSpeed * Time.deltaTime);
+                return;
             }
         }
+        if (keyboard.leftShiftKey.isPressed && HasGazLeft())
+        {
+            MoveForwardWithBoost();
+        }
+        else
+        {
+            transform.Translate(Vector3.forward * baseSpeed * Time.deltaTime);
+        }
+    }
+
+    private bool TractorHitsObject(out RaycastHit hit)
+    {
+        return Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 1f);
     }
 
     private bool HasGazLeft()
@@ -104,10 +96,20 @@ public class PlayerManager : MonoBehaviour
         return gazLeft > 0;
     }
 
+    private void MoveForwardWithBoost()
+    {
+        transform.Translate(Vector3.forward * sprintSpeed * Time.deltaTime);
+        gazLeft--;
+        if (!HasGazLeft())
+        {
+            return;
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
-        InputListen();
+        ListenForInputs();
 
         if (vie == 0)
             mort();
