@@ -2,9 +2,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerManager : MonoBehaviour
+public class PlayerMovement : MonoBehaviour
 {
-    // Le reste
     private float baseSpeed = 4.0f;
     private float sprintSpeed = 8.0f;
     public float rotSpeed = 5.0f;
@@ -15,18 +14,17 @@ public class PlayerManager : MonoBehaviour
     public float maxDanger = 100.0f;
     public GameObject danger;
     public GameObject[] possibleDanger;
-    public int vie = 3;
-    private int maxVie = 3;
     public bool touchable = true;
     [HideInInspector] public Vector3 startPos;
     public GameObject vies;
     [HideInInspector] public Vector3[] posVies;
     public GameObject camera1;
     private Keyboard keyboard;
+    private PlayerStatus _playerStatus;
 
-    // Use this for initialization
     void Start()
     {
+        _playerStatus = GetComponent<PlayerStatus>();
         keyboard = Keyboard.current;
         if (keyboard == null)
         {
@@ -36,10 +34,28 @@ public class PlayerManager : MonoBehaviour
         StartCoroutine(DistanceComparison());
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag.Equals("pickable"))
+        {
+            PickUpEgg(collision.gameObject);
+        }
+        else if (collision.gameObject.tag.Equals("droplocation"))
+        {
+            _playerStatus.DropEggs();
+        }
+    }
+
+    private void PickUpEgg(GameObject egg)
+    {
+        _playerStatus.PickUpEgg();
+        Destroy(egg);
+    }
+
     private void PositionLifeIndicators()
     {
         startPos = transform.position;
-        for (int x = 0; vies.transform.childCount < vie; x++)
+        for (int x = 0; vies.transform.childCount < _playerStatus.Lives; x++)
         {
             posVies[x] = vies.transform.GetChild(x).transform.localPosition;
         }
@@ -111,7 +127,7 @@ public class PlayerManager : MonoBehaviour
     {
         ListenForInputs();
 
-        if (vie == 0)
+        if (_playerStatus.Lives == 0)
             mort();
 
         if (gazLeft < gazMax && !Keyboard.current.leftShiftKey.isPressed)
@@ -183,7 +199,7 @@ public class PlayerManager : MonoBehaviour
     {
         StartCoroutine(timerImmuniter());
         Destroy(vies.transform.GetChild(vies.transform.childCount - 1).gameObject);
-        vie -= 1;
+        _playerStatus.LoseLife();
     }
 
     public IEnumerator timerImmuniter()
@@ -195,15 +211,15 @@ public class PlayerManager : MonoBehaviour
 
     public void mort()
     {
+        _playerStatus.SetMaximumLives();
         transform.position = startPos;
-        vie = maxVie;
         gazLeft = gazMax;
         regainLife();
     }
 
     public void regainLife()
     {
-        for (int x = 0; vies.transform.childCount < vie; x++)
+        for (int x = 0; vies.transform.childCount < _playerStatus.Lives; x++)
         {
             GameObject v;
             v = Instantiate(Resources.Load("prefabs/vie", typeof(GameObject))) as GameObject;
@@ -217,5 +233,4 @@ public class PlayerManager : MonoBehaviour
             v.transform.GetComponent<RectTransform>().localPosition = pos;
         }
     }
-
 }

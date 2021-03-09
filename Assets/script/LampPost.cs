@@ -16,9 +16,9 @@ public class LampPost : MonoBehaviour
 
     void OnTriggerEnter(Collider col)
     {
-        if (col.transform == player1.transform && player1.GetComponent<PlayerManager>().touchable == true)
+        if (col.transform == player1.transform && player1.GetComponent<PlayerMovement>().touchable == true)
         {
-            player1.GetComponent<PlayerManager>().curDanger += 10;
+            player1.GetComponent<PlayerMovement>().curDanger += 10;
         }
     }
 }

@@ -26,12 +26,12 @@ public class EnemyController : MonoBehaviour {
         {
             if(hit.transform.tag == "player1")
             {
-                if(player1.GetComponent<PlayerManager>().touchable == true)
+                if(player1.GetComponent<PlayerMovement>().touchable == true)
                 {
                     float distanceFromPlayer;
                     distanceFromPlayer = Vector3.Distance(this.transform.position, player1.transform.position);
 
-                    player1.GetComponent<PlayerManager>().curDanger += 15/distanceFromPlayer;
+                    player1.GetComponent<PlayerMovement>().curDanger += 15/distanceFromPlayer;
 
                     HitSound();
                 }

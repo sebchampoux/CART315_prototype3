@@ -7,19 +7,19 @@ using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour {
 
-    public int player1points;
-    public Text pointsPlayer1;
-    public int curPlayer1HoldEggs;
+    //public int player1points;
+    //public Text pointsPlayer1;
+    //public int curPlayer1HoldEggs;
 
     [HideInInspector]
-    public int nbreEnnemie = 2;
-    public int curNbreEnnemie;
+    public int nbrEnnemis = 2;
+    public int nombreEnnemisActuel;
 
     public int curOeufs;
     public int maxOeufs = 4;
     
     public GameObject[] spawnPointEnnemis;
-    public GameObject[] spawnPointOeuf;
+    public GameObject[] spawnPointOeufs;
     
     public GameObject oeuf;
     public GameObject ennemi;
@@ -33,7 +33,7 @@ public class GameController : MonoBehaviour {
 
     private void Awake()
     {
-        player1points = 0;
+        //player1points = 0;
         player1 = GameObject.FindGameObjectWithTag("player1");
     }
 
@@ -48,10 +48,10 @@ public class GameController : MonoBehaviour {
     private void Update()
     {
 
-        if(Int32.Parse(pointsPlayer1.text) != player1points)
-        {
-            pointsPlayer1.text = player1points.ToString();
-        }
+        //if(Int32.Parse(pointsPlayer1.text) != player1points)
+        //{
+        //    pointsPlayer1.text = player1points.ToString();
+        //}
 
         //nouveau niveau
         /*
@@ -92,7 +92,7 @@ public class GameController : MonoBehaviour {
 
     private void StartLevel()
     {
-        curPlayer1HoldEggs = 0;
+        //curPlayer1HoldEggs = 0;
         spawnOeufs();
         spawnEnnemies();
     }
@@ -109,7 +109,7 @@ public class GameController : MonoBehaviour {
 
     private void spawnOeufs()
     {
-        foreach(GameObject spawnPt in spawnPointOeuf)
+        foreach(GameObject spawnPt in spawnPointOeufs)
         {
             GameObject oeufInstance = Instantiate(oeuf, spawnPt.transform);
             oeufInstance.transform.parent = gameObject.transform;
