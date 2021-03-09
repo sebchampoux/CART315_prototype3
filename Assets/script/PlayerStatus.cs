@@ -35,7 +35,8 @@ public class PlayerStatus : MonoBehaviour
     public int Lives
     {
         get { return _lives; }
-        private set {
+        private set
+        {
             _lives = Mathf.Max(0, value);
             OnStatusUpdate();
         }

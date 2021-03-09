@@ -4,43 +4,48 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    private float baseSpeed = 4.0f;
-    private float sprintSpeed = 8.0f;
-    public float rotSpeed = 5.0f;
+    [SerializeField] private float baseSpeed = 4.0f;
+    [SerializeField] private float sprintSpeed = 8.0f;
+    [SerializeField] private float rotSpeed = 5.0f;
     private float gazLeft = 100.0f;
     private float gazMax = 100.0f;
-    public GameObject gaz;
+    //public GameObject gaz;
     public float curDanger = 0;
     public float maxDanger = 100.0f;
-    public GameObject danger;
+    //public GameObject danger;
     public GameObject[] possibleDanger;
     public bool touchable = true;
     [HideInInspector] public Vector3 startPos;
-    public GameObject vies;
+    //public GameObject vies;
     [HideInInspector] public Vector3[] posVies;
-    public GameObject camera1;
-    private Keyboard keyboard;
+    public GameObject _camera;
+    private Keyboard _keyboard;
     private PlayerStatus _playerStatus;
 
     void Start()
     {
         _playerStatus = GetComponent<PlayerStatus>();
-        keyboard = Keyboard.current;
-        if (keyboard == null)
-        {
-            throw new UnityException("Keyboard not detected, not cool");
-        }
+        RetrieveKeyboard();
         PositionLifeIndicators();
         StartCoroutine(DistanceComparison());
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void RetrieveKeyboard()
     {
-        if (collision.gameObject.tag.Equals("pickable"))
+        _keyboard = Keyboard.current;
+        if (_keyboard == null)
         {
-            PickUpEgg(collision.gameObject);
+            throw new UnityException("Keyboard not detected, not cool");
         }
-        else if (collision.gameObject.tag.Equals("droplocation"))
+    }
+
+    private void OnTriggerEnter(Collider collider)
+    {
+        if (collider.gameObject.CompareTag("oeuf"))
+        {
+            PickUpEgg(collider.gameObject);
+        }
+        else if (collider.gameObject.tag.Equals("droplocation"))
         {
             _playerStatus.DropEggs();
         }
@@ -49,33 +54,33 @@ public class PlayerMovement : MonoBehaviour
     private void PickUpEgg(GameObject egg)
     {
         _playerStatus.PickUpEgg();
-        Destroy(egg);
+        Destroy(egg.gameObject);
     }
 
     private void PositionLifeIndicators()
     {
-        startPos = transform.position;
-        for (int x = 0; vies.transform.childCount < _playerStatus.Lives; x++)
-        {
-            posVies[x] = vies.transform.GetChild(x).transform.localPosition;
-        }
+        //startPos = transform.position;
+        //for (int x = 0; vies.transform.childCount < _playerStatus.Lives; x++)
+        //{
+        //    posVies[x] = vies.transform.GetChild(x).transform.localPosition;
+        //}
     }
 
     private void ListenForInputs()
     {
-        if (keyboard == null)
+        if (_keyboard == null)
         {
             throw new UnityException("No keyboard detected");
         }
-        if (keyboard.dKey.isPressed)
+        if (_keyboard.dKey.isPressed)
         {
             transform.Rotate(Vector3.up * rotSpeed, Space.World);
         }
-        if (keyboard.aKey.isPressed)
+        if (_keyboard.aKey.isPressed)
         {
             transform.Rotate(Vector3.up * -1 * rotSpeed, Space.World);
         }
-        if (keyboard.wKey.isPressed)
+        if (_keyboard.wKey.isPressed)
         {
             MoveTractorForward();
         }
@@ -92,7 +97,7 @@ public class PlayerMovement : MonoBehaviour
                 return;
             }
         }
-        if (keyboard.leftShiftKey.isPressed && HasGazLeft())
+        if (_keyboard.leftShiftKey.isPressed && HasGazLeft())
         {
             MoveForwardWithBoost();
         }
@@ -147,8 +152,8 @@ public class PlayerMovement : MonoBehaviour
         {
             //camera1.GetComponent<Grayscale>().enabled = false;
         }
-        gaz.GetComponent<RectTransform>().localScale = new Vector3((gazLeft / 100.0f), 1, 1);
-        danger.GetComponent<RectTransform>().localScale = new Vector3((curDanger / 100), 1, 1);
+        //gaz.GetComponent<RectTransform>().localScale = new Vector3((gazLeft / 100.0f), 1, 1);
+        //danger.GetComponent<RectTransform>().localScale = new Vector3((curDanger / 100), 1, 1);
     }
 
     public IEnumerator DistanceComparison()
@@ -198,7 +203,7 @@ public class PlayerMovement : MonoBehaviour
     public void perdVie()
     {
         StartCoroutine(timerImmuniter());
-        Destroy(vies.transform.GetChild(vies.transform.childCount - 1).gameObject);
+        //Destroy(vies.transform.GetChild(vies.transform.childCount - 1).gameObject);
         _playerStatus.LoseLife();
     }
 
@@ -219,18 +224,18 @@ public class PlayerMovement : MonoBehaviour
 
     public void regainLife()
     {
-        for (int x = 0; vies.transform.childCount < _playerStatus.Lives; x++)
-        {
-            GameObject v;
-            v = Instantiate(Resources.Load("prefabs/vie", typeof(GameObject))) as GameObject;
+        //for (int x = 0; vies.transform.childCount < _playerStatus.Lives; x++)
+        //{
+        //    GameObject v;
+        //    v = Instantiate(Resources.Load("prefabs/vie", typeof(GameObject))) as GameObject;
 
-            v.transform.SetParent(vies.transform);
+        //    v.transform.SetParent(vies.transform);
 
-            Vector3 pos = v.transform.GetComponent<RectTransform>().localPosition;
-            pos.y = 0;
-            pos.x += 155 + (x * 35);
+        //    Vector3 pos = v.transform.GetComponent<RectTransform>().localPosition;
+        //    pos.y = 0;
+        //    pos.x += 155 + (x * 35);
 
-            v.transform.GetComponent<RectTransform>().localPosition = pos;
-        }
+        //    v.transform.GetComponent<RectTransform>().localPosition = pos;
+        //}
     }
 }
