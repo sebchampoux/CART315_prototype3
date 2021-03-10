@@ -7,30 +7,18 @@ using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
-    [HideInInspector]
-    public int nbrEnnemis = 2;
-    public int nombreEnnemisActuel;
-
-    public int curOeufs;
-    public int maxOeufs = 4;
+    private int _nbrOeufs = 0;
 
     public GameObject[] spawnPointEnnemis;
     public GameObject[] spawnPointOeufs;
 
-    public GameObject oeuf;
-    public GameObject ennemi;
-
-    private GameObject player1;
+    public GameObject oeufPrefab;
+    public GameObject ennemiPrefab;
 
     private GameObject[] video;
 
     public GameObject paneauVictoire;
     public GameObject paneauJoueur1;
-
-    private void Awake()
-    {
-        player1 = GameObject.FindGameObjectWithTag("player1");
-    }
 
 
     void Start()
@@ -58,8 +46,19 @@ public class GameController : MonoBehaviour
     {
         foreach (GameObject spawnPt in spawnPointOeufs)
         {
-            GameObject oeufInstance = Instantiate(oeuf, spawnPt.transform);
+            _nbrOeufs++;
+            GameObject oeufInstance = Instantiate(oeufPrefab, spawnPt.transform);
             oeufInstance.transform.parent = gameObject.transform;
+            oeufInstance.GetComponent<Oeuf>().OnEggDestroy += OnEggDestroy;
+        }
+    }
+
+    private void OnEggDestroy(object sender, EventArgs e)
+    {
+        _nbrOeufs--;
+        if (_nbrOeufs == 0)
+        {
+            // Y'a pu d'oeufs, fin de la partie
         }
     }
 
@@ -67,7 +66,7 @@ public class GameController : MonoBehaviour
     {
         foreach (GameObject spawnPt in spawnPointEnnemis)
         {
-            GameObject ennemiGO = Instantiate(ennemi, spawnPt.transform);
+            GameObject ennemiGO = Instantiate(ennemiPrefab, spawnPt.transform);
             ennemiGO.transform.parent = gameObject.transform;
         }
     }

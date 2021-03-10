@@ -5,8 +5,6 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour {
     [HideInInspector]
     public GameObject player1;
-    [HideInInspector]
-    public GameObject player2;
 
     public AudioClip hitSound;
     public AudioSource hitAudioSource;
@@ -14,7 +12,6 @@ public class EnemyController : MonoBehaviour {
 
     void Start () {
         player1 = GameObject.FindGameObjectWithTag("player1");
-        player2 = GameObject.FindGameObjectWithTag("player2");
     }
 	
 
@@ -26,12 +23,12 @@ public class EnemyController : MonoBehaviour {
         {
             if(hit.transform.tag == "player1")
             {
-                if(player1.GetComponent<PlayerMovement>().touchable == true)
+                if(player1.GetComponent<PlayerMovement>().Touchable == true)
                 {
                     float distanceFromPlayer;
                     distanceFromPlayer = Vector3.Distance(this.transform.position, player1.transform.position);
 
-                    player1.GetComponent<PlayerMovement>().curDanger += 15/distanceFromPlayer;
+                    player1.GetComponent<PlayerMovement>()._currentDanger += 15/distanceFromPlayer;
 
                     HitSound();
                 }

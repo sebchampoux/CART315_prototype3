@@ -1,32 +1,71 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private float baseSpeed = 4.0f;
-    [SerializeField] private float sprintSpeed = 8.0f;
-    [SerializeField] private float rotSpeed = 5.0f;
-    private float gazLeft = 100.0f;
-    private float gazMax = 100.0f;
-    //public GameObject gaz;
-    public float curDanger = 0;
-    public float maxDanger = 100.0f;
-    //public GameObject danger;
-    public GameObject[] possibleDanger;
-    public bool touchable = true;
+    [SerializeField] private float _baseSpeed = 4.0f;
+    [SerializeField] private float _sprintSpeed = 8.0f;
+    [SerializeField] private float _rotationSpeed = 5.0f;
     [HideInInspector] public Vector3 startPos;
-    //public GameObject vies;
-    [HideInInspector] public Vector3[] posVies;
-    public GameObject _camera;
+
+    private float _gaz = 100.0f;
+    private float _maxGaz = 100.0f;
+
+    public float _currentDanger = 0;
+    public float _maxDanger = 100.0f;
+
+    private bool _touchable = true;
+    private GameObject _camera;
     private Keyboard _keyboard;
     private PlayerStatus _playerStatus;
+    private GameObject[] _possibleDangers;
+
+    public event EventHandler MovementStatsUpdate;
+
+    public float Gaz
+    {
+        get { return _gaz; }
+        private set
+        {
+            _gaz = Mathf.Max(0, value);
+            OnMovementStatsUpdate();
+        }
+    }
+
+    public float Danger
+    {
+        get { return _currentDanger; }
+        private set
+        {
+            _currentDanger = Mathf.Max(0, value);
+            OnMovementStatsUpdate();
+        }
+    }
+
+    public float MaxGaz
+    {
+        get { return _maxGaz; }
+    }
+    public float MaxDanger
+    {
+        get { return _maxDanger; }
+    }
+    public bool Touchable
+    {
+        get { return _touchable; }
+    }
+
+    protected void OnMovementStatsUpdate()
+    {
+        MovementStatsUpdate?.Invoke(this, EventArgs.Empty);
+    }
 
     void Start()
     {
         _playerStatus = GetComponent<PlayerStatus>();
         RetrieveKeyboard();
-        PositionLifeIndicators();
         StartCoroutine(DistanceComparison());
     }
 
@@ -57,15 +96,6 @@ public class PlayerMovement : MonoBehaviour
         Destroy(egg.gameObject);
     }
 
-    private void PositionLifeIndicators()
-    {
-        //startPos = transform.position;
-        //for (int x = 0; vies.transform.childCount < _playerStatus.Lives; x++)
-        //{
-        //    posVies[x] = vies.transform.GetChild(x).transform.localPosition;
-        //}
-    }
-
     private void ListenForInputs()
     {
         if (_keyboard == null)
@@ -74,11 +104,11 @@ public class PlayerMovement : MonoBehaviour
         }
         if (_keyboard.dKey.isPressed)
         {
-            transform.Rotate(Vector3.up * rotSpeed, Space.World);
+            transform.Rotate(Vector3.up * _rotationSpeed, Space.World);
         }
         if (_keyboard.aKey.isPressed)
         {
-            transform.Rotate(Vector3.up * -1 * rotSpeed, Space.World);
+            transform.Rotate(Vector3.up * -1 * _rotationSpeed, Space.World);
         }
         if (_keyboard.wKey.isPressed)
         {
@@ -103,7 +133,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            transform.Translate(Vector3.forward * baseSpeed * Time.deltaTime);
+            transform.Translate(Vector3.forward * _baseSpeed * Time.deltaTime);
         }
     }
 
@@ -114,20 +144,19 @@ public class PlayerMovement : MonoBehaviour
 
     private bool HasGazLeft()
     {
-        return gazLeft > 0;
+        return Gaz > 0;
     }
 
     private void MoveForwardWithBoost()
     {
-        transform.Translate(Vector3.forward * sprintSpeed * Time.deltaTime);
-        gazLeft--;
+        transform.Translate(Vector3.forward * _sprintSpeed * Time.deltaTime);
+        Gaz--;
         if (!HasGazLeft())
         {
             return;
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         ListenForInputs();
@@ -135,16 +164,16 @@ public class PlayerMovement : MonoBehaviour
         if (_playerStatus.Lives == 0)
             mort();
 
-        if (gazLeft < gazMax && !Keyboard.current.leftShiftKey.isPressed)
-            gazLeft += 0.5f;
+        if (Gaz < _maxGaz && !Keyboard.current.leftShiftKey.isPressed)
+            Gaz += 0.5f;
 
-        if (curDanger > 95.0f && touchable == true)
+        if (Danger > 95.0f && _touchable == true)
             perdVie();
 
-        if (curDanger > maxDanger)
-            curDanger = maxDanger;
+        if (Danger > _maxDanger)
+            Danger = _maxDanger;
 
-        if (curDanger > 50.0f)
+        if (Danger > 50.0f)
         {
             //camera1.GetComponent<Grayscale>().enabled = true;
         }
@@ -152,23 +181,21 @@ public class PlayerMovement : MonoBehaviour
         {
             //camera1.GetComponent<Grayscale>().enabled = false;
         }
-        //gaz.GetComponent<RectTransform>().localScale = new Vector3((gazLeft / 100.0f), 1, 1);
-        //danger.GetComponent<RectTransform>().localScale = new Vector3((curDanger / 100), 1, 1);
     }
 
     public IEnumerator DistanceComparison()
     {
         while (true)
         {
-            possibleDanger = GameObject.FindGameObjectsWithTag("Danger");
+            _possibleDangers = GameObject.FindGameObjectsWithTag("Danger");
             yield return new WaitForSeconds(0.01f);
 
             float distanceFromPlayer;
 
-            for (int x = 0; x < possibleDanger.Length; x++)
+            for (int x = 0; x < _possibleDangers.Length; x++)
             {
 
-                distanceFromPlayer = Vector3.Distance(this.transform.position, possibleDanger[x].transform.position);
+                distanceFromPlayer = Vector3.Distance(this.transform.position, _possibleDangers[x].transform.position);
 
                 if (distanceFromPlayer < 7.5f)
                 {
@@ -178,23 +205,23 @@ public class PlayerMovement : MonoBehaviour
                         {
                             if (distanceFromPlayer < 1.5f)
                             {
-                                if (curDanger < maxDanger)
-                                    curDanger += 1f;
+                                if (Danger < _maxDanger)
+                                    Danger += 1f;
                             }
-                            else if (curDanger < maxDanger)
-                                curDanger += 0.5f;
+                            else if (Danger < _maxDanger)
+                                Danger += 0.5f;
                         }
-                        else if (curDanger < maxDanger)
-                            curDanger += 0.25f;
+                        else if (Danger < _maxDanger)
+                            Danger += 0.25f;
                     }
-                    else if (curDanger < maxDanger)
-                        curDanger += 0.15f;
+                    else if (Danger < _maxDanger)
+                        Danger += 0.15f;
                 }
             }
 
-            if (curDanger > 0.0f)
+            if (Danger > 0.0f)
             {
-                curDanger -= 1f;
+                Danger -= 1f;
             }
 
         }
@@ -202,40 +229,22 @@ public class PlayerMovement : MonoBehaviour
 
     public void perdVie()
     {
-        StartCoroutine(timerImmuniter());
-        //Destroy(vies.transform.GetChild(vies.transform.childCount - 1).gameObject);
+        StartCoroutine(immunity());
         _playerStatus.LoseLife();
     }
 
-    public IEnumerator timerImmuniter()
+    public IEnumerator immunity()
     {
-        touchable = false;
+        _touchable = false;
         yield return new WaitForSeconds(2);
-        touchable = true;
+        _touchable = true;
     }
 
     public void mort()
     {
         _playerStatus.SetMaximumLives();
         transform.position = startPos;
-        gazLeft = gazMax;
-        regainLife();
-    }
-
-    public void regainLife()
-    {
-        //for (int x = 0; vies.transform.childCount < _playerStatus.Lives; x++)
-        //{
-        //    GameObject v;
-        //    v = Instantiate(Resources.Load("prefabs/vie", typeof(GameObject))) as GameObject;
-
-        //    v.transform.SetParent(vies.transform);
-
-        //    Vector3 pos = v.transform.GetComponent<RectTransform>().localPosition;
-        //    pos.y = 0;
-        //    pos.x += 155 + (x * 35);
-
-        //    v.transform.GetComponent<RectTransform>().localPosition = pos;
-        //}
+        Gaz = _maxGaz;
+        _playerStatus.SetMaximumLives();
     }
 }

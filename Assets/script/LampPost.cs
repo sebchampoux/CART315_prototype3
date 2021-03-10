@@ -4,21 +4,12 @@ using UnityEngine;
 
 public class LampPost : MonoBehaviour
 {
-    private GameObject player1;
-    private GameObject gameController;
-
-    // Use this for initialization
-    void Start()
-    {
-        player1 = GameObject.FindGameObjectWithTag("player1");
-        gameController = GameObject.Find("gameController");
-    }
-
     void OnTriggerEnter(Collider col)
     {
-        if (col.transform == player1.transform && player1.GetComponent<PlayerMovement>().touchable == true)
+        PlayerMovement playerMovement = col.gameObject.GetComponent<PlayerMovement>();
+        if (playerMovement)
         {
-            player1.GetComponent<PlayerMovement>().curDanger += 10;
+            playerMovement._currentDanger += 10;
         }
     }
 }
