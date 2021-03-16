@@ -84,9 +84,10 @@ public class PlayerMovement : MonoBehaviour
         {
             PickUpEgg(collider.gameObject);
         }
-        else if (collider.gameObject.tag.Equals("droplocation"))
+        else if (collider.gameObject.CompareTag("DropLocation"))
         {
-            _playerStatus.DropEggs();
+            DropLocation dropLocation = collider.gameObject.GetComponent<DropLocation>();
+            _playerStatus.DropEggs(dropLocation);
         }
     }
 
@@ -121,8 +122,8 @@ public class PlayerMovement : MonoBehaviour
         RaycastHit hit;
         if (TractorHitsObject(out hit))
         {
-            string tTag = hit.transform.tag;
-            if (tTag == "Danger" || tTag == "obstacle")
+            string hitTag = hit.transform.tag;
+            if (hitTag.Equals("Danger") || hitTag.Equals("obstacle") || hitTag.Equals("DropLocation"))
             {
                 return;
             }

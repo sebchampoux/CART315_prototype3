@@ -57,8 +57,9 @@ public class PlayerStatus : MonoBehaviour
         Eggs += 1;
     }
 
-    public void DropEggs()
+    public void DropEggs(DropLocation dropLocation)
     {
+        dropLocation.DropEggs(Eggs);
         Eggs = 0;
     }
 

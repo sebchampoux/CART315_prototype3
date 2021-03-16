@@ -7,7 +7,8 @@ using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
-    private int _nbrOeufs = 0;
+    private int _droppedEggs = 0;
+    private int _numberOfEggsSpanned = 0;
 
     public GameObject[] spawnPointEnnemis;
     public GameObject[] spawnPointOeufs;
@@ -17,14 +18,44 @@ public class GameController : MonoBehaviour
 
     private GameObject[] video;
 
-    public GameObject paneauVictoire;
-    public GameObject paneauJoueur1;
-
+    [SerializeField] private DropLocation[] _dropLocations;
 
     void Start()
     {
         StartLevel();
+        SubscribeToDropLocationsEvents();
         video = GameObject.FindGameObjectsWithTag("cancer");
+    }
+
+    private void SubscribeToDropLocationsEvents()
+    {
+        foreach (DropLocation d in _dropLocations)
+        {
+            d.DropEggsEvent += OnDropEggAtPickupTruck;
+        }
+    }
+
+    private void OnDropEggAtPickupTruck(object sender, EventArgs e)
+    {
+        CountDroppedEggs();
+        if (AllEggsPickedUp())
+        {
+            StartCoroutine(EndGame());
+        }
+    }
+
+    private void CountDroppedEggs()
+    {
+        _droppedEggs = 0;
+        foreach (DropLocation d in _dropLocations)
+        {
+            _droppedEggs += d.DroppedEggs;
+        }
+    }
+
+    private bool AllEggsPickedUp()
+    {
+        return _droppedEggs >= _numberOfEggsSpanned;
     }
 
     private void StartLevel()
@@ -33,7 +64,7 @@ public class GameController : MonoBehaviour
         spawnEnnemies();
     }
 
-    public IEnumerator finJeu()
+    public IEnumerator EndGame()
     {
         while (true)
         {
@@ -46,19 +77,9 @@ public class GameController : MonoBehaviour
     {
         foreach (GameObject spawnPt in spawnPointOeufs)
         {
-            _nbrOeufs++;
+            _numberOfEggsSpanned++;
             GameObject oeufInstance = Instantiate(oeufPrefab, spawnPt.transform);
             oeufInstance.transform.parent = gameObject.transform;
-            oeufInstance.GetComponent<Oeuf>().OnEggDestroy += OnEggDestroy;
-        }
-    }
-
-    private void OnEggDestroy(object sender, EventArgs e)
-    {
-        _nbrOeufs--;
-        if (_nbrOeufs == 0)
-        {
-            // Y'a pu d'oeufs, fin de la partie
         }
     }
 

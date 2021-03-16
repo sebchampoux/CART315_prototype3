@@ -7,6 +7,9 @@ public class Oeuf : MonoBehaviour
 
     private void OnDestroy()
     {
-        OnEggDestroy.Invoke(this, EventArgs.Empty);
+        if (OnEggDestroy != null)
+        {
+            OnEggDestroy.Invoke(this, EventArgs.Empty);
+        }
     }
 }

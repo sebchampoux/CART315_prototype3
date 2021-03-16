@@ -7,10 +7,9 @@ TagManager:
   - Danger
   - player1
   - cancer
-  - vieJoueur1
   - oeuf
-  - player2
   - obstacle
+  - DropLocation
   layers:
   - Default
   - TransparentFX
